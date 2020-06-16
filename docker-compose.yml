@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.18.1
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.external-url=$PROMETHEUS_WEB_EXTERNAL_URL
+      - --web.route-prefix=/prometheus/
+    volumes:
+      - $PROMETHEUS_DIR:/etc/prometheus
+      - $PROMETHEUS_DATA_DIR:/prometheus

@@ -19,7 +19,7 @@ services:
       placement:
         constraints:
           - node.role == manager
-          
+
   cadvisor:
     image: gcr.io/google-containers/cadvisor:v0.36.0
     container_name: cadvisor
@@ -33,5 +33,26 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     deploy:
       mode: global
+
+  node-exporter:
+    image: stefanprodan/swarmprom-node-exporter:v0.16.0
+    environment:
+      - NODE_ID={{.Node.ID}}
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /etc/hostname:/etc/nodename
+    command:
+      - '--path.sysfs=/host/sys'
+      - '--path.procfs=/host/proc'
+      - '--collector.textfile.directory=/etc/node-exporter/'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--no-collector.ipvs'
+    deploy:
+      mode: global
+
 volumes:
   prometheus: {}

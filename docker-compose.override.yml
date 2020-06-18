@@ -7,8 +7,8 @@ services:
       - ./prometheus/prometheus.dev.yml:/etc/prometheus/prometheus.yml:ro
 
   grafana:
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning/
+    environment:
+      - HOST_NAME=localhost
 
   node-exporter:
     volumes:

@@ -45,6 +45,7 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
       - /etc/hostname:/etc/nodename
+    entrypoint: /etc/node-exporter/entrypoint.sh
     command:
       - '--path.sysfs=/host/sys'
       - '--path.procfs=/host/proc'

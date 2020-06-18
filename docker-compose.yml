@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.8"
 
 services:
   prometheus:
@@ -8,17 +8,14 @@ services:
       - 9090:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-      - --web.external-url=$PROMETHEUS_WEB_EXTERNAL_URL
-      - --web.route-prefix=/prometheus/
+#      - --web.external-url=$PROMETHEUS_WEB_EXTERNAL_URL
+#      - --web.route-prefix=/prometheus/
     volumes:
       - $PROMETHEUS_DIR:/etc/prometheus
       - prometheus:/prometheus
     deploy:
       mode: replicated
       replicas: 1
-      placement:
-        constraints:
-          - node.role == manager
 
   cadvisor:
     image: gcr.io/google-containers/cadvisor:v0.36.0
@@ -54,5 +51,59 @@ services:
     deploy:
       mode: global
 
+  grafana:
+    image: grafana/grafana:7.0.0
+    container_name: grafana
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    volumes:
+      #- $GRAFANA_DIR/$GRAFANA_INI_FILE:/etc/grafana/grafana.ini
+      #- $GRAFANA_DIR/provisioning:/etc/grafana/provisioning/
+      - grafana:/var/lib/grafana
+    configs:
+      # - source: grafana-config
+      #   target: /etc/grafana/grafana.ini
+      - source: grafana-datasource
+        target: /etc/grafana/provisioning/datasources/prometheus.yml
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  # alertmanager:
+  #   image: prom/alertmanager:v0.20.0
+  #   container_name: alertmanager
+  #   volumes:
+  #     - alertmanager:/alertmanager
+  #   command:
+  #     - --config.file=/etc/alertmanager/config.yml
+  #     - --web.external-url=$ALERTMANAGER_WEB_EXTERNAL_URL
+  #     - --web.route-prefix=/
+  #     - --storage.path=/alertmanager
+  #   restart: unless-stopped
+  #   ports:
+  #     - 9093:9093
+  #   configs:
+  #     - source: alertmanager-config
+  #       target: /etc/alertmanager/config.yml
+
+  #   deploy:
+  #     mode: replicated
+  #     replicas: 1
+    
 volumes:
   prometheus: {}
+  # alertmanager: {}
+  grafana: {}
+
+configs:
+  alertmanager-config:
+    file: ./alertmanager/config.yml
+    name: alertmanager-config-${TIMESTAMP}
+  # grafana-config:
+  #   file: ./grafana/grafana.ini
+  #   name: grafana-config-${TIMESTAMP}
+  grafana-datasource:
+    file: ./grafana/datasources/prometheus.yml
+    name: grafana-datasource${TIMESTAMP}

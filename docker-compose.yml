@@ -8,8 +8,8 @@ services:
       - 9090:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-#      - --web.external-url=$PROMETHEUS_WEB_EXTERNAL_URL
-#      - --web.route-prefix=/prometheus/
+      - --web.external-url=$PROMETHEUS_WEB_EXTERNAL_URL
+      - --web.route-prefix=/prometheus/
     volumes:
       #- $PROMETHEUS_DIR:/etc/prometheus
       - prometheus:/prometheus

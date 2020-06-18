@@ -2,6 +2,18 @@ version: "3.8"
 
 services:
 
+  prometheus:
+    volumes:
+      - ./prometheus/prometheus.dev.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning/
+
   node-exporter:
     volumes:
       - ./node-exporter/dev-hostname:/etc/nodename
+
+  alertmanager:
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/config.yml

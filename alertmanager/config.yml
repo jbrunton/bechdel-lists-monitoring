@@ -1,11 +1,27 @@
+global:
+  #slack_api_url: '$ALERTMANAGER_SLACK_API_URL'
+  #opsgenie_api_key: '$ALERTMANAGER_OPSGENIE_API_KEY'
+  slack_api_url: https://example.com/slack-url
+  opsgenie_api_key: TEST-KEY
+  opsgenie_api_url: 'https://api.eu.opsgenie.com/'
+
 route:
-  receiver: 'slack'
+  receiver: 'opsgenie'
+  routes:
+    - receiver: 'slack'
+      continue: true
+      repeat_interval: 5m
+    - receiver: 'opsgenie'
+      match:
+        severity: critical
 
 receivers:
+  - name: 'opsgenie'
+    opsgenie_configs:
+      - send_resolved: true
   - name: 'slack'
     slack_configs:
-        - send_resolved: true
-          text: "{{ .CommonAnnotations.description }}"
-          #username: <user>#
-          #channel: <channel>#
-          #api_url: <url>#
+      - send_resolved: true
+        text: "{{ .CommonAnnotations.description }}"
+        username: 'Prometheus'
+        channel: '#bechdel-lists'

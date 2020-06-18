@@ -13,7 +13,6 @@ services:
   node-exporter:
     volumes:
       - ./node-exporter/dev-hostname:/etc/nodename
-      - ./node-exporter/entrypoint.sh:/etc/node-exporter/entrypoint.sh
 
   alertmanager:
     volumes:

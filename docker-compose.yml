@@ -45,6 +45,7 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
       - /etc/hostname:/etc/nodename
+      - ./node-exporter/entrypoint.sh:/etc/node-exporter/entrypoint.sh
     entrypoint: /etc/node-exporter/entrypoint.sh
     command:
       - '--path.sysfs=/host/sys'
@@ -52,6 +53,9 @@ services:
       - '--collector.textfile.directory=/etc/node-exporter/'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
       - '--no-collector.ipvs'
+    # configs:
+    #   - source: node-exporter-entrypoint
+    #     target: /etc/node-exporter/entrypoint.sh
     deploy:
       mode: global
 
@@ -114,9 +118,11 @@ services:
       - source: nginx-services-conf
         target: /etc/nginx/services.conf
       - source: nginx-default-conf
-        target: /etc/nginx/confi.d/default.conf
+        target: /etc/nginx/conf.d/default.conf
     secrets:
       - htpasswd
+      - monitoring_jbrunton_com.pem
+      - monitoring_jbrunton_com.key
     depends_on:
       - grafana
       - prometheus
@@ -128,13 +134,13 @@ volumes:
 
 configs:
   prometheus-config:
-    file: ./prometheus/prometheus.prod.yml
+    file: ./prometheus/prometheus.dev.yml
     name: prometheus-config-${TIMESTAMP}
   alertmanager-config:
     file: ./alertmanager/config.yml
     name: alertmanager-config-${TIMESTAMP}
   grafana-datasource:
-    file: ./grafana/datasources/prometheus.yml
+    file: ./grafana/provisioning/datasources/prometheus.yml
     name: grafana-datasource-${TIMESTAMP}
   nginx-upstreams-conf:
     file: ./nginx/upstreams.conf
@@ -142,10 +148,17 @@ configs:
   nginx-services-conf:
     file: ./nginx/services.conf
     name: nginx-services-conf-${TIMESTAMP}    
-  nginx-conf:
+  nginx-default-conf:
     file: ./nginx/default.prod.conf
     name: nginx-default-conf-${TIMESTAMP}
+  node-exporter-entrypoint:
+    file: ./node-exporter/entrypoint.sh
   
 secrets:
   htpasswd:
     file: ./nginx/.htpasswd
+  monitoring_jbrunton_com.pem:
+    external: true
+  monitoring_jbrunton_com.key:
+    external: true
+    

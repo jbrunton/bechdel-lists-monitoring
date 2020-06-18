@@ -16,6 +16,8 @@ services:
     configs:
       - source: prometheus-config
         target: /etc/prometheus/prometheus.yml
+      - source: prometheus-rules
+        target: /etc/prometheus/rules.yml
     deploy:
       mode: replicated
       replicas: 1
@@ -36,6 +38,7 @@ services:
 
   node-exporter:
     image: stefanprodan/swarmprom-node-exporter:v0.16.0
+    hostname: "myapp.{{.Task.Slot}}"
     environment:
       - NODE_ID={{.Node.ID}}
     ports:
@@ -131,8 +134,11 @@ volumes:
 
 configs:
   prometheus-config:
-    file: ./prometheus/prometheus.dev.yml
+    file: ./prometheus/prometheus.prod.yml
     name: prometheus-config-${TIMESTAMP}
+  prometheus-rules:
+    file: ./prometheus/rules.yml
+    name: prometheus-rules-${TIMESTAMP}
   alertmanager-config:
     file: ./alertmanager/config.yml
     name: alertmanager-config-${TIMESTAMP}

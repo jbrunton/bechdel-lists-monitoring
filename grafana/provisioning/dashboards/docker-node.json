@@ -16,8 +16,7 @@
   "editable": true,
   "gnetId": 179,
   "graphTooltip": 1,
-  "id": 2,
-  "iteration": 1590432204708,
+  "iteration": 1592513259389,
   "links": [],
   "panels": [
     {
@@ -1427,13 +1426,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(node_cpu_seconds_total{node_name=~\"$node_name\",mode!=\"idle\"} [1m]) * 100",
+          "expr": "rate(node_cpu_seconds_total{mode!=\"idle\"} [1m]) * 100 * on (instance) group_left(node_name) node_meta{node_name=~\"$node_name\"}",
           "interval": "",
           "legendFormat": "{{ mode }}",
           "refId": "A"
         },
         {
-          "expr": "rate(node_cpu_seconds_total{node_name=~\"$node_name\",mode=\"idle\"} [1m]) * 100",
+          "expr": "rate(node_cpu_seconds_total{mode=\"idle\"} [1m]) * 100 * on (instance) group_left(node_name) node_meta{node_name=~\"$node_name\"}",
           "interval": "",
           "legendFormat": "idle",
           "refId": "B"
@@ -1531,13 +1530,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_memory_MemTotal_bytes{node_name=~\"$node_name\"} - node_memory_MemAvailable_bytes{node_name=~\"$node_name\"}",
+          "expr": "avg by (node_name) ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) * on (instance) group_left(node_name) node_meta{node_name=~\"$node_name\"})",
           "interval": "",
           "legendFormat": "Used",
           "refId": "B"
         },
         {
-          "expr": "node_memory_MemAvailable_bytes{node_name=~\"$node_name\"}",
+          "expr": "avg by (node_name) (node_memory_MemAvailable_bytes * on (instance) group_left(node_name) node_meta{node_name=~\"$node_name\"})",
           "interval": "",
           "legendFormat": "Available",
           "refId": "A"
@@ -2155,8 +2154,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "bechdel-lists-production",
-          "value": "bechdel-lists-production"
+          "text": "node2",
+          "value": "node2"
         },
         "datasource": "Prometheus",
         "definition": "node_meta",
@@ -2180,7 +2179,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -2210,5 +2209,5 @@
   "timezone": "browser",
   "title": "Docker and Host Monitoring",
   "uid": "64nrElFmk",
-  "version": 17
+  "version": 2
 }

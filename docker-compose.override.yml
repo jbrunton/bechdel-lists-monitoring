@@ -52,9 +52,14 @@ services:
     volumes:
       - ./node-exporter/dev-hostname:/etc/nodename
 
-  # alertmanager:
-  #   volumes:
-  #     - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+  alertmanager:
+    volumes:
+      - ./alertmanager/config.yml:/etc/alertmanager/config.yml
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+      - traefik.http.routers.monitoring-alertmanager.rule=Host(`alertmanager.${DOMAIN?}`)
 
   # nginx:
   #   volumes:

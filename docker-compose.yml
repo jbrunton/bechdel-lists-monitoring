@@ -99,25 +99,28 @@ services:
       mode: replicated
       replicas: 1
 
-  # alertmanager:
-  #   image: prom/alertmanager:v0.20.0
-  #   container_name: alertmanager
-  #   volumes:
-  #     - alertmanager:/alertmanager
-  #   command:
-  #     - --config.file=/etc/alertmanager/config.yml
-  #     # - --web.external-url=$ALERTMANAGER_WEB_EXTERNAL_URL
-  #     - --web.route-prefix=/
-  #     - --storage.path=/alertmanager
-  #   restart: unless-stopped
-  #   ports:
-  #     - 9093:9093
-  #   configs:
-  #     - source: alertmanager-config
-  #       target: /etc/alertmanager/config.yml
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
+  alertmanager:
+    image: prom/alertmanager:v0.20.0
+    container_name: alertmanager
+    networks:
+      - traefik-public
+      - net
+    volumes:
+      - alertmanager:/alertmanager
+    command:
+      - --config.file=/etc/alertmanager/config.yml
+      # - --web.external-url=$ALERTMANAGER_WEB_EXTERNAL_URL
+      # - --web.route-prefix=/
+      - --storage.path=/alertmanager
+    restart: unless-stopped
+    # ports:
+    #   - 9093:9093
+    configs:
+      - source: alertmanager-config
+        target: /etc/alertmanager/config.yml
+    deploy:
+      mode: replicated
+      replicas: 1
 
   # nginx:
   #   image: "nginx:1.18.0-alpine"
@@ -148,8 +151,8 @@ services:
   #     - prometheus
     
 volumes:
-  prometheus:
-  # alertmanager: {}
+  prometheus: {}
+  alertmanager: {}
   grafana: {}
 
 configs:

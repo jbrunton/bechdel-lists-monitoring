@@ -18,6 +18,8 @@ services:
         target: /etc/prometheus/prometheus.yml
       - source: prometheus-rules
         target: /etc/prometheus/rules.yml
+      - source: prometheus-alerts
+        target: /etc/prometheus/alerts.yml
     deploy:
       mode: replicated
       replicas: 1
@@ -186,6 +188,9 @@ configs:
   prometheus-rules:
     file: ./prometheus/rules.yml
     name: prometheus-rules-${TIMESTAMP}
+  prometheus-alerts:
+    file: ./prometheus/alerts.yml
+    name: prometheus-alerts-${TIMESTAMP}  
   alertmanager-config:
     file: ./alertmanager/config.yml
     name: alertmanager-config-${TIMESTAMP}

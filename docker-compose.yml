@@ -4,14 +4,9 @@ services:
   prometheus:
     image: prom/prometheus:v2.18.1
     container_name: prometheus
-    # ports:
-    #   - 9090:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
-#      - --web.external-url=$PROMETHEUS_WEB_EXTERNAL_URL
-#      - --web.route-prefix=/prometheus/
     volumes:
-      #- $PROMETHEUS_DIR:/etc/prometheus
       - prometheus:/prometheus
     configs:
       - source: prometheus-config
@@ -37,21 +32,13 @@ services:
         - traefik.http.services.monitoring-prometheus.loadbalancer.server.port=9090
         - traefik.http.middlewares.monitoring-prometheus-auth.basicauth.usersfile=/run/secrets/htpasswd
         - traefik.http.routers.monitoring-prometheus-https.middlewares=monitoring-prometheus-auth
-        # - traefik.http.middlewares.swarmprom-prometheus-auth.basicauth.users=${ADMIN_USER?Variable ADMIN_USER not set}:${HASHED_PASSWORD?Variable HASHED_PASSWORD not set}
-        # - traefik.http.routers.swarmprom-prometheus-https.middlewares=swarmprom-prometheus-auth
-
     networks:
       - net
       - traefik-public
-
-    # secrets:
-    #   - htpasswd
   
   cadvisor:
     image: gcr.io/google-containers/cadvisor:v0.36.0
     container_name: cadvisor
-    # ports:
-    #   - 8080:8080
     command: -logtostderr -docker_only
     volumes:
       - /:/rootfs:ro
@@ -72,8 +59,6 @@ services:
       - net
     environment:
       - NODE_ID={{.Node.ID}}
-    # ports:
-    #   - 9100:9100
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -85,20 +70,12 @@ services:
       - '--collector.textfile.directory=/home/node-exporter/'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
       - '--no-collector.ipvs'
-    # labels:
-    #   - node={{ .Node.Spec.Labels.node }}
-    #   - FOO=BAR
     deploy:
       mode: global
-      # labels:
-      #   - node={{ .Node.Spec.Labels.node }}
-      #   - FOO=BAR
 
   grafana:
     image: jbrunton/bechdel-lists-monitoring-grafana
     container_name: grafana
-    # ports:
-    #   - 3000:3000
     depends_on:
       - prometheus
     networks:
@@ -135,46 +112,14 @@ services:
       - alertmanager:/alertmanager
     command:
       - --config.file=/etc/alertmanager/config.yml
-      # - --web.external-url=$ALERTMANAGER_WEB_EXTERNAL_URL
-      # - --web.route-prefix=/
       - --storage.path=/alertmanager
     restart: unless-stopped
-    # ports:
-    #   - 9093:9093
     configs:
       - source: alertmanager-config
         target: /etc/alertmanager/config.yml
     deploy:
       mode: replicated
       replicas: 1
-
-  # nginx:
-  #   image: "nginx:1.18.0-alpine"
-  #   container_name: nginx
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   #volumes:
-  #     # - $NGINX_CERTS_DIR:/etc/nginx/certs:ro
-  #     # - $NGINX_AUTH_DIR/.htpasswd:/etc/nginx/.htpasswd:ro
-  #     # - $NGINX_DIR/upstreams.conf:/etc/nginx/upstreams.conf:ro
-  #     # - $NGINX_DIR/services.conf:/etc/nginx/services.conf:ro
-  #     # - $NGINX_DIR/$NGINX_CONF_FILE:/etc/nginx/conf.d/default.conf:ro
-  #     # - $NGINX_DIR/html:/usr/share/nginx/html:ro
-  #   configs:
-  #     - source: nginx-upstreams-conf
-  #       target: /etc/nginx/upstreams.conf
-  #     - source: nginx-services-conf
-  #       target: /etc/nginx/services.conf
-  #     - source: nginx-default-conf
-  #       target: /etc/nginx/conf.d/default.conf
-  #   secrets:
-  #     - htpasswd
-  #     - monitoring_jbrunton_com.pem
-  #     - monitoring_jbrunton_com.key
-  #   depends_on:
-  #     - grafana
-  #     - prometheus
     
 volumes:
   prometheus: {}
@@ -194,24 +139,7 @@ configs:
   alertmanager-config:
     file: ./alertmanager/config.yml
     name: alertmanager-config-${TIMESTAMP}
-  # nginx-upstreams-conf:
-  #   file: ./nginx/upstreams.conf
-  #   name: nginx-upstreams-conf-${TIMESTAMP}
-  # nginx-services-conf:
-  #   file: ./nginx/services.conf
-  #   name: nginx-services-conf-${TIMESTAMP}    
-  # nginx-default-conf:
-  #   file: ./nginx/default.prod.conf
-  #   name: nginx-default-conf-${TIMESTAMP}
-  # node-exporter-entrypoint:
-  #   file: ./node-exporter/entrypoint.sh
   
-
-  monitoring_jbrunton_com.pem:
-    external: true
-  monitoring_jbrunton_com.key:
-    external: true
-
 networks:
   net:
     driver: overlay

@@ -80,22 +80,24 @@ services:
       #   - node={{ .Node.Spec.Labels.node }}
       #   - FOO=BAR
 
-  # grafana:
-  #   image: jbrunton/bechdel-lists-monitoring-grafana
-  #   container_name: grafana
-  #   ports:
-  #     - 3000:3000
-  #   depends_on:
-  #     - prometheus
-  #   volumes:
-  #     - grafana:/var/lib/grafana
-  #   environment:
-  #     - HOST_NAME=$HOST_NAME
-  #   build:
-  #     context: ./grafana
-  #   deploy:
-  #     mode: replicated
-  #     replicas: 1
+  grafana:
+    image: jbrunton/bechdel-lists-monitoring-grafana
+    container_name: grafana
+    # ports:
+    #   - 3000:3000
+    depends_on:
+      - prometheus
+    networks:
+      - traefik-public
+    volumes:
+      - grafana:/var/lib/grafana
+    environment:
+      - HOST_NAME=$HOST_NAME
+    build:
+      context: ./grafana
+    deploy:
+      mode: replicated
+      replicas: 1
 
   # alertmanager:
   #   image: prom/alertmanager:v0.20.0
@@ -148,7 +150,7 @@ services:
 volumes:
   prometheus:
   # alertmanager: {}
-  # grafana: {}
+  grafana: {}
 
 configs:
   prometheus-config:

@@ -33,12 +33,17 @@ services:
         - traefik.http.routers.monitoring-prometheus-https.tls=true
         - traefik.http.routers.monitoring-prometheus-https.tls.certresolver=le
         - traefik.http.services.monitoring-prometheus.loadbalancer.server.port=9090
+        - traefik.http.middlewares.monitoring-prometheus-auth.basicauth.usersfile=/run/secrets/htpasswd
+        - traefik.http.routers.monitoring-prometheus-https.middlewares=monitoring-prometheus-auth
         # - traefik.http.middlewares.swarmprom-prometheus-auth.basicauth.users=${ADMIN_USER?Variable ADMIN_USER not set}:${HASHED_PASSWORD?Variable HASHED_PASSWORD not set}
         # - traefik.http.routers.swarmprom-prometheus-https.middlewares=swarmprom-prometheus-auth
 
     networks:
       - net
       - traefik-public
+
+    # secrets:
+    #   - htpasswd
   
   cadvisor:
     image: gcr.io/google-containers/cadvisor:v0.36.0
@@ -196,9 +201,7 @@ configs:
   # node-exporter-entrypoint:
   #   file: ./node-exporter/entrypoint.sh
   
-secrets:
-  htpasswd:
-    file: ./nginx/.htpasswd
+
   monitoring_jbrunton_com.pem:
     external: true
   monitoring_jbrunton_com.key:

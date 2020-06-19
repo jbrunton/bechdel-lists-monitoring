@@ -120,7 +120,21 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.monitoring-alertmanager-http.rule=Host(`alertmanager.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-alertmanager-http.entrypoints=http
+        - traefik.http.routers.monitoring-alertmanager-http.middlewares=https-redirect
+        - traefik.http.routers.monitoring-alertmanager-https.rule=Host(`alertmanager.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-alertmanager-https.entrypoints=https
+        - traefik.http.routers.monitoring-alertmanager-https.tls=true
+        - traefik.http.routers.monitoring-alertmanager-https.tls.certresolver=le
+        - traefik.http.services.monitoring-alertmanager.loadbalancer.server.port=9093
+        - traefik.http.middlewares.monitoring-alertmanager-auth.basicauth.usersfile=/run/secrets/htpasswd
+        - traefik.http.routers.monitoring-alertmanager-https.middlewares=monitoring-alertmanager-auth
+
 volumes:
   prometheus: {}
   alertmanager: {}

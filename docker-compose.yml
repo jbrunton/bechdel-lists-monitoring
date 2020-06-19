@@ -25,7 +25,17 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.monitoring-prometheus.rule=Host(`prometheus.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-prometheus-http.rule=Host(`prometheus.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-prometheus-http.entrypoints=http
+        - traefik.http.routers.monitoring-prometheus-http.middlewares=https-redirect
+        - traefik.http.routers.monitoring-prometheus-https.rule=Host(`prometheus.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-prometheus-https.entrypoints=https
+        - traefik.http.routers.monitoring-prometheus-https.tls=true
+        - traefik.http.routers.monitoring-prometheus-https.tls.certresolver=le
+        - traefik.http.services.monitoring-prometheus.loadbalancer.server.port=9090
+        # - traefik.http.middlewares.swarmprom-prometheus-auth.basicauth.users=${ADMIN_USER?Variable ADMIN_USER not set}:${HASHED_PASSWORD?Variable HASHED_PASSWORD not set}
+        # - traefik.http.routers.swarmprom-prometheus-https.middlewares=swarmprom-prometheus-auth
+
     networks:
       - net
       - traefik-public
@@ -47,7 +57,9 @@ services:
       - net
 
   node-exporter:
-    image: prom/node-exporter:v1.0.1
+    image: jbrunton/bechdel-lists-node-exporter
+    build:
+      context: ./node-exporter
     hostname: "myapp.{{.Task.Slot}}"
     networks:
       - net
@@ -60,17 +72,12 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
       - /etc/hostname:/etc/nodename
-      - ./node-exporter/entrypoint.sh:/etc/node-exporter/entrypoint.sh
-    entrypoint: /etc/node-exporter/entrypoint.sh
     command:
       - '--path.sysfs=/host/sys'
       - '--path.procfs=/host/proc'
       - '--collector.textfile.directory=/home/node-exporter/'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
       - '--no-collector.ipvs'
-    # configs:
-    #   - source: node-exporter-entrypoint
-    #     target: /etc/node-exporter/entrypoint.sh
     # labels:
     #   - node={{ .Node.Spec.Labels.node }}
     #   - FOO=BAR
@@ -92,13 +99,25 @@ services:
     volumes:
       - grafana:/var/lib/grafana
     environment:
-      - HOST_NAME=$HOST_NAME
+      - DOMAIN=$DOMAIN
     build:
       context: ./grafana
     deploy:
       mode: replicated
       replicas: 1
-
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.monitoring-grafana-http.rule=Host(`grafana.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-grafana-http.entrypoints=http
+        - traefik.http.routers.monitoring-grafana-http.middlewares=https-redirect
+        - traefik.http.routers.monitoring-grafana-https.rule=Host(`grafana.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-grafana-https.entrypoints=https
+        - traefik.http.routers.monitoring-grafana-https.tls=true
+        - traefik.http.routers.monitoring-grafana-https.tls.certresolver=le
+        - traefik.http.services.monitoring-grafana.loadbalancer.server.port=3000
+  
   alertmanager:
     image: prom/alertmanager:v0.20.0
     container_name: alertmanager
@@ -162,9 +181,9 @@ configs:
   prometheus-rules:
     file: ./prometheus/rules.yml
     name: prometheus-rules-${TIMESTAMP}
-  # alertmanager-config:
-  #   file: ./alertmanager/config.yml
-  #   name: alertmanager-config-${TIMESTAMP}
+  alertmanager-config:
+    file: ./alertmanager/config.yml
+    name: alertmanager-config-${TIMESTAMP}
   # nginx-upstreams-conf:
   #   file: ./nginx/upstreams.conf
   #   name: nginx-upstreams-conf-${TIMESTAMP}

@@ -42,5 +42,4 @@ jobs:
         env:
           HOST: staging.bechdel-lists.jbrunton.com
           DOCKER_HOST: "ssh://deployer@node1.bechdel-lists.jbrunton.com"
-        with:
-          script: ./deploy.sh
+        run: ./deploy.sh

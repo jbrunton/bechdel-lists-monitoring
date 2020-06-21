@@ -31,12 +31,12 @@ jobs:
           DOCKER_USERNAME: jbrunton
         run: echo "$DOCKER_ACCESS_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
   
-      - name: build
-        env:
-          COMPOSE_FILE=docker-compose.yml
-        run: |
-          docker-compose build
-          docker-compose push
+      # - name: build
+      #   env:
+      #     COMPOSE_FILE=docker-compose.yml
+      #   run: |
+      #     docker-compose build
+      #     docker-compose push
 
       - name: deploy
         env:

@@ -28,6 +28,9 @@ jobs:
       - name: test ssh
         run: ssh -T deployer@node1.bechdel-lists.jbrunton.com
 
+      - name: docker info
+        run: docker -v
+
       - name: docker login
         env:
           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}

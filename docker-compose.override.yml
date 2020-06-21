@@ -9,16 +9,14 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.monitoring-prometheus.rule=Host(`prometheus.${DOMAIN?}`)
+      - traefik.http.routers.monitoring-prometheus.rule=Host(`prometheus.${HOST?}`)
 
 
   grafana:
-    environment:
-      - DOMAIN=localhost
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.monitoring-grafana.rule=Host(`grafana.${DOMAIN?}`)
+      - traefik.http.routers.monitoring-grafana.rule=Host(`grafana.${HOST?}`)
 
   
   node-exporter:
@@ -32,4 +30,4 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
-      - traefik.http.routers.monitoring-alertmanager.rule=Host(`alertmanager.${DOMAIN?}`)
+      - traefik.http.routers.monitoring-alertmanager.rule=Host(`alertmanager.${HOST?}`)

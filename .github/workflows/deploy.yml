@@ -1,0 +1,46 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'README.md'
+
+env:
+  CI: 1
+  FORCE_COLOR: 1
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: ssh setup
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DEPLOYER_SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: docker login
+        env:
+          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          DOCKER_USERNAME: jbrunton
+        run: echo "$DOCKER_ACCESS_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  
+      - name: build
+        env:
+          COMPOSE_FILE=docker-compose.yml
+        run: |
+          docker-compose build
+          docker-compose push
+
+      - name: deploy
+        env:
+          HOST: staging.bechdel-lists.jbrunton.com
+          DOCKER_HOST: "ssh://deployer@node1.bechdel-lists.jbrunton.com"
+        with:
+          script: ./deploy.sh

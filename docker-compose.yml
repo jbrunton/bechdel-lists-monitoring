@@ -22,10 +22,10 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.monitoring-prometheus-http.rule=Host(`prometheus.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-prometheus-http.rule=Host(`prometheus.${HOST?}`)
         - traefik.http.routers.monitoring-prometheus-http.entrypoints=http
         - traefik.http.routers.monitoring-prometheus-http.middlewares=https-redirect
-        - traefik.http.routers.monitoring-prometheus-https.rule=Host(`prometheus.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-prometheus-https.rule=Host(`prometheus.${HOST?}`)
         - traefik.http.routers.monitoring-prometheus-https.entrypoints=https
         - traefik.http.routers.monitoring-prometheus-https.tls=true
         - traefik.http.routers.monitoring-prometheus-https.tls.certresolver=le
@@ -83,7 +83,7 @@ services:
     volumes:
       - grafana:/var/lib/grafana
     environment:
-      - DOMAIN=$DOMAIN
+      - HOST
     build:
       context: ./grafana
     deploy:
@@ -93,10 +93,10 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.monitoring-grafana-http.rule=Host(`grafana.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-grafana-http.rule=Host(`grafana.${HOST?}`)
         - traefik.http.routers.monitoring-grafana-http.entrypoints=http
         - traefik.http.routers.monitoring-grafana-http.middlewares=https-redirect
-        - traefik.http.routers.monitoring-grafana-https.rule=Host(`grafana.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-grafana-https.rule=Host(`grafana.${HOST?}`)
         - traefik.http.routers.monitoring-grafana-https.entrypoints=https
         - traefik.http.routers.monitoring-grafana-https.tls=true
         - traefik.http.routers.monitoring-grafana-https.tls.certresolver=le
@@ -124,10 +124,10 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
         - traefik.constraint-label=traefik-public
-        - traefik.http.routers.monitoring-alertmanager-http.rule=Host(`alertmanager.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-alertmanager-http.rule=Host(`alertmanager.${HOST?}`)
         - traefik.http.routers.monitoring-alertmanager-http.entrypoints=http
         - traefik.http.routers.monitoring-alertmanager-http.middlewares=https-redirect
-        - traefik.http.routers.monitoring-alertmanager-https.rule=Host(`alertmanager.${DOMAIN?}`)
+        - traefik.http.routers.monitoring-alertmanager-https.rule=Host(`alertmanager.${HOST?}`)
         - traefik.http.routers.monitoring-alertmanager-https.entrypoints=https
         - traefik.http.routers.monitoring-alertmanager-https.tls=true
         - traefik.http.routers.monitoring-alertmanager-https.tls.certresolver=le

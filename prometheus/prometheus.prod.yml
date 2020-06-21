@@ -26,6 +26,12 @@ scrape_configs:
       - 'tasks.node-exporter'
       type: 'A'
       port: 9100
+  - job_name: api
+    static_configs:
+      - targets: [staging.bechdel-lists.jbrunton.com]
+        labels:
+          instance: 'bechdel-lists-staging'
+    metrics_path: /api/metrics
 
 rule_files:
   - /etc/prometheus/rules.yml

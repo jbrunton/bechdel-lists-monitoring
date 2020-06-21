@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-if [ -z "$DOMAIN" ]; then
-  echo "Error: DOMAIN must be set."
+if [ -z "$HOST" ]; then
+  echo "Error: HOST must be set."
   exit 1
 fi
 

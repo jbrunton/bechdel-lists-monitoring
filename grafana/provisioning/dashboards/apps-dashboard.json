@@ -15,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 5,
-  "iteration": 1590433604123,
+  "iteration": 1592818778125,
   "links": [],
   "panels": [
     {
@@ -446,9 +445,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "nginx:throughput:mean1m{instance=~\"$instance\"}",
+          "expr": "sum(traefik:throughput:mean1m)",
+          "instant": false,
           "interval": "",
-          "legendFormat": "Requests",
+          "legendFormat": "",
           "refId": "A"
         }
       ],
@@ -456,7 +456,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Nginx Throughput",
+      "title": "Traefik Throughput",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -472,6 +472,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:160",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -480,6 +481,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:161",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -597,19 +599,19 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "text": "bechdel-lists-production",
-          "value": "bechdel-lists-production"
+          "selected": false,
+          "text": "localhost",
+          "value": "localhost"
         },
         "datasource": "Prometheus",
-        "definition": "up",
+        "definition": "up{job=\"api\"}",
         "hide": 0,
         "includeAll": false,
         "label": "",
         "multi": false,
         "name": "instance",
         "options": [],
-        "query": "up",
+        "query": "up{job=\"api\"}",
         "refresh": 1,
         "regex": "/.*instance=\"([^\"]*)\".*/",
         "skipUrlSync": false,
@@ -623,7 +625,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -642,5 +644,5 @@
   "timezone": "",
   "title": "Apps Dashboard",
   "uid": "nx8Ny4kGk",
-  "version": 6
+  "version": 2
 }

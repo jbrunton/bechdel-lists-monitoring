@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": 179,
   "graphTooltip": 1,
-  "iteration": 1592513259389,
+  "iteration": 1592823127477,
   "links": [],
   "panels": [
     {
@@ -1321,7 +1321,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(node_network_receive_bytes_total{node_name=~\"$node_name\"}[1m]))",
+          "expr": "sum(node:network_receive_bytes:mean1m{node_name=~\"$node_name\"})",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1330,7 +1330,7 @@
           "refId": "A"
         },
         {
-          "expr": "- sum(rate(node_network_transmit_bytes_total{node_name=~\"$node_name\"}[1m]))",
+          "expr": "- sum(node:network_transmit_bytes:mean1m{node_name=~\"$node_name\"})",
           "interval": "",
           "legendFormat": "Transmit",
           "refId": "B"
@@ -1356,6 +1356,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:114",
           "format": "Bps",
           "label": null,
           "logBase": 1,
@@ -1364,6 +1365,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:115",
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -2154,8 +2156,8 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "node2",
-          "value": "node2"
+          "text": "localhost",
+          "value": "localhost"
         },
         "datasource": "Prometheus",
         "definition": "node_meta",
@@ -2209,5 +2211,5 @@
   "timezone": "browser",
   "title": "Docker and Host Monitoring",
   "uid": "64nrElFmk",
-  "version": 2
+  "version": 1
 }

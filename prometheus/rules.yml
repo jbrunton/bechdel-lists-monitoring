@@ -15,8 +15,10 @@ groups:
         expr: rate(http_server_requests_total[1m])
       - record: http:errors:mean1m
         expr: rate(http_server_requests_total{code="500"}[1m])/rate(http_server_requests_total[1m])
-  - name: Nginx Rules
+  - name: Traefik Rules
     rules:
-      - record: nginx:throughput:mean1m
-        expr: rate(nginx_http_requests_total[1m])
+      - record: traefik:throughput:mean1m
+        expr: rate(traefik_entrypoint_requests_total[1m])
+      - record: traefik:service_throughput:mean1m
+        expr: rate(traefik_service_requests_total[1m])
  

@@ -11,14 +11,14 @@ services:
       - traefik.docker.network=traefik-public
       - traefik.http.routers.monitoring-prometheus.rule=Host(`prometheus.${HOST?}`)
 
-
   grafana:
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
       - traefik.http.routers.monitoring-grafana.rule=Host(`grafana.${HOST?}`)
 
-  
   node-exporter:
     volumes:
       - ./node-exporter/dev-hostname:/etc/nodename

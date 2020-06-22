@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": 179,
   "graphTooltip": 1,
-  "iteration": 1592834423598,
+  "iteration": 1592841976886,
   "links": [],
   "panels": [
     {
@@ -1134,6 +1134,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:522",
           "format": "percent",
           "label": null,
           "logBase": 1,
@@ -1142,6 +1143,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:523",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1248,6 +1250,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:877",
           "format": "percent",
           "label": null,
           "logBase": 1,
@@ -1256,6 +1259,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:878",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1460,6 +1464,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:169",
           "decimals": null,
           "format": "short",
           "label": null,
@@ -1469,6 +1474,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:170",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1564,6 +1570,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:805",
           "format": "decbytes",
           "label": null,
           "logBase": 1,
@@ -1572,6 +1579,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:806",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1635,13 +1643,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(node_filesystem_size_bytes{node_name=~\"$node_name\"} - node_filesystem_avail_bytes{node_name=~\"$node_name\"})",
+          "expr": "(sum by (instance) (node_filesystem_size_bytes - node_filesystem_avail_bytes)) * on (instance) group_left(node_name) node_meta{node_name=~\"$node_name\"}",
           "interval": "",
           "legendFormat": "Used",
           "refId": "B"
         },
         {
-          "expr": "sum(node_filesystem_avail_bytes{node_name=~\"$node_name\"})",
+          "expr": "(sum by (instance) (node_filesystem_avail_bytes)) * on (instance) group_left(node_name) node_meta{node_name=~\"$node_name\"}",
           "interval": "",
           "legendFormat": "Available",
           "refId": "A"
@@ -1667,6 +1675,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:97",
           "format": "decbytes",
           "label": null,
           "logBase": 1,
@@ -1675,6 +1684,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:98",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1791,6 +1801,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:310",
           "format": "none",
           "label": null,
           "logBase": 1,
@@ -1799,6 +1810,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:311",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1902,6 +1914,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:450",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -1910,6 +1923,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:451",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2010,6 +2024,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:663",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -2018,6 +2033,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:664",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2156,8 +2172,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "bechdel-lists-node-2",
-          "value": "bechdel-lists-node-2"
+          "text": "bechdel-lists-node-1",
+          "value": "bechdel-lists-node-1"
         },
         "datasource": "Prometheus",
         "definition": "node_meta",
@@ -2181,7 +2197,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -2211,5 +2227,5 @@
   "timezone": "browser",
   "title": "Docker and Host Monitoring",
   "uid": "64nrElFmk",
-  "version": 2
+  "version": 1
 }

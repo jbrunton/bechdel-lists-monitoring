@@ -136,9 +136,12 @@ services:
         - traefik.http.routers.monitoring-alertmanager-https.middlewares=monitoring-alertmanager-auth
 
 volumes:
-  prometheus: {}
-  alertmanager: {}
-  grafana: {}
+  prometheus:
+    external: true
+  alertmanager:
+    external: true
+  grafana:
+    external: true
 
 configs:
   prometheus-config:

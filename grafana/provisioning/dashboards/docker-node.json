@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": 179,
   "graphTooltip": 1,
-  "iteration": 1592823127477,
+  "iteration": 1592833763241,
   "links": [],
   "panels": [
     {
@@ -1760,7 +1760,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(container_cpu_system_seconds_total{image!=\"\",node_name=~\"$node_name\"}[1m])",
+          "expr": "irate(container_cpu_system_seconds_total{image!=\"\"}[1m]) * on (container_label_com_docker_swarm_node_id) group_left(node_name) node_meta",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -1791,6 +1791,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:171",
           "format": "none",
           "label": null,
           "logBase": 1,
@@ -1799,6 +1800,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:172",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1871,7 +1873,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "container_memory_max_usage_bytes{image!=\"\",node_name=~\"$node_name\"}",
+          "expr": "container_memory_max_usage_bytes{image!=\"\"} * on (container_label_com_docker_swarm_node_id) group_left(node_name) node_meta",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -1902,6 +1904,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:50",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -1910,6 +1913,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:51",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2181,7 +2185,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {
@@ -2211,5 +2215,5 @@
   "timezone": "browser",
   "title": "Docker and Host Monitoring",
   "uid": "64nrElFmk",
-  "version": 1
+  "version": 3
 }

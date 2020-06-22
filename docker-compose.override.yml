@@ -20,6 +20,8 @@ services:
       - traefik.http.routers.monitoring-grafana.rule=Host(`grafana.localhost`)
 
   node-exporter:
+    environment:
+      - NODE_ID=localhost
     volumes:
       - ./node-exporter/dev-hostname:/etc/nodename
       - ./node-exporter/entrypoint.sh:/etc/node-exporter/entrypoint.sh

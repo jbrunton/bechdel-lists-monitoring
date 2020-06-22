@@ -51,7 +51,7 @@ services:
       - net
 
   node-exporter:
-    image: jbrunton/bechdel-lists-node-exporter
+    image: jbrunton/bechdel-lists-monitoring-node-exporter
     build:
       context: ./node-exporter
     hostname: "myapp.{{.Task.Slot}}"

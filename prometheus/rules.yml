@@ -7,6 +7,11 @@ groups:
         expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 * on (instance) group_left(node_name) node_meta
       - record: node:fs_usage:mean1m
         expr: (1 - node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 * on (instance) group_left(node_name) node_meta
+      - record: node:network_receive_bytes:mean1m
+        expr: irate(node_network_receive_bytes_total[1m]) * on (instance) group_left(node_name) node_meta
+      - record: node:network_transmit_bytes:mean1m
+        expr: irate(node_network_transmit_bytes_total[1m]) * on (instance) group_left(node_name) node_meta
+
   - name: Http Rules
     rules:
       - record: http:latency:mean1m

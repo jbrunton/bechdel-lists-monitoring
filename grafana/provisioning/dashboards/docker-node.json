@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": 179,
   "graphTooltip": 1,
-  "iteration": 1592823127477,
+  "iteration": 1592834423598,
   "links": [],
   "panels": [
     {
@@ -1760,7 +1760,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(container_cpu_system_seconds_total{image!=\"\",node_name=~\"$node_name\"}[1m])",
+          "expr": "irate(container_cpu_system_seconds_total{image!=\"\"}[1m]) * on (container_label_com_docker_swarm_node_id) group_left(node_name) node_meta{node_name=~\"$node_name\"}",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -1871,7 +1871,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "container_memory_max_usage_bytes{image!=\"\",node_name=~\"$node_name\"}",
+          "expr": "container_memory_max_usage_bytes{image!=\"\"} * on (container_label_com_docker_swarm_node_id) group_left(node_name) node_meta{node_name=~\"$node_name\"}",
           "format": "time_series",
           "interval": "10s",
           "intervalFactor": 1,
@@ -1980,7 +1980,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sort_desc(sum by (name) (rate(container_network_receive_bytes_total{image!=\"\",node_name=~\"$node_name\"}[1m] ) ))",
+          "expr": "sort_desc(sum by (name) (rate(container_network_receive_bytes_total{image!=\"\"}[1m] ) * on (container_label_com_docker_swarm_node_id) group_left(node_name) node_meta{node_name=~\"$node_name\"}))",
           "interval": "10s",
           "intervalFactor": 1,
           "legendFormat": "{{ name }}",
@@ -2088,7 +2088,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (name) (rate(container_network_receive_bytes_total{image!=\"\",node_name=~\"$node_name\"}[1m] ) )",
+          "expr": "sort_desc(sum by (name) (rate(container_network_transmit_bytes_total{image!=\"\"}[1m] ) * on (container_label_com_docker_swarm_node_id) group_left(node_name) node_meta{node_name=~\"$node_name\"}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2155,9 +2155,9 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
-          "text": "localhost",
-          "value": "localhost"
+          "selected": true,
+          "text": "bechdel-lists-node-2",
+          "value": "bechdel-lists-node-2"
         },
         "datasource": "Prometheus",
         "definition": "node_meta",
@@ -2181,7 +2181,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -2211,5 +2211,5 @@
   "timezone": "browser",
   "title": "Docker and Host Monitoring",
   "uid": "64nrElFmk",
-  "version": 1
+  "version": 2
 }

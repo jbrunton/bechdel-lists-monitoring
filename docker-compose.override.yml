@@ -12,8 +12,8 @@ services:
       - traefik.http.routers.monitoring-prometheus.rule=Host(`prometheus.localhost`)
 
   grafana:
-    # volumes:
-    #   - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public

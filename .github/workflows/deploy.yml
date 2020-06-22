@@ -25,12 +25,6 @@ jobs:
           key: ${{ secrets.DEPLOYER_SSH_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      - name: test ssh
-        run: ssh -T deployer@node1.bechdel-lists.jbrunton.com
-
-      - name: docker info
-        run: docker -v
-
       - name: docker login
         env:
           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
@@ -39,7 +33,7 @@ jobs:
   
       - name: build
         env:
-          COMPOSE_FILE=docker-compose.yml
+          COMPOSE_FILE: docker-compose.yml
         run: |
           docker-compose build
           docker-compose push

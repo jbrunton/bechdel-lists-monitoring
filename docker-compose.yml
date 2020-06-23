@@ -18,6 +18,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.monitoring.role == prometheus
       labels:
         - traefik.enable=true
         - traefik.docker.network=traefik-public
@@ -136,12 +139,9 @@ services:
         - traefik.http.routers.monitoring-alertmanager-https.middlewares=monitoring-alertmanager-auth
 
 volumes:
-  prometheus:
-    external: true
-  alertmanager:
-    external: true
-  grafana:
-    external: true
+  prometheus: {}
+  alertmanager: {}
+  grafana: {}
 
 configs:
   prometheus-config:
